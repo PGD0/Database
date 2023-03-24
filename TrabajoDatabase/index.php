@@ -72,8 +72,29 @@
         Registro.addEventListener('click', (e) => {
             e.preventDefault();
             document.getElementById('container').innerHTML = `
-            <form action="./clases/CPartidos.php" method="POST">
-                
+            <form action="./clases/CEquipos.php" method="POST">
+                <input type="date" name="fecha" id="fecha">
+                <select name="equipo_local" id="equipo_local">
+                    <?php
+                    include_once('./clases/CEquipos.php');
+                    $consulta_local = CEquipo::mostrarEquipos();
+                    foreach ($consulta_local as $fila_1) {
+                        echo "<option>" . $fila_1['NOMBRE_EQUIPO'] . "</option>";
+                    }
+                    ?>
+                </select>
+                <input type="number" name="Goles_equ_local" id="Goles_equ_local">
+                <input type="number" name="Goles_equ_visit" id="Goles_equ_visit">
+                <select name="equipo_visit" id="equipo_visit">
+                    <?php
+                    include_once('./clases/CEquipos.php');
+                    $consulta_visit = CEquipo::mostrarEquipos();
+                    foreach ($consulta_visit as $fila_2) {
+                        echo "<option>" . $fila_2['NOMBRE_EQUIPO'] . "</option>";
+                    }
+                    ?>
+                </select>
+                <input type="submit" name="insertar" id="insertar" value="insertar">
             </form>
             `
         })
@@ -81,7 +102,33 @@
         Resultados.addEventListener('click', (e) => {
             e.preventDefault();
             document.getElementById('container').innerHTML = `
-            <textarea name="Resultados_partidos" id="" cols="30" rows="10"></textarea>
+            <table id="miTabla">
+                <tr>
+                    <th>ID_PARTIDO</th>
+                    <th>FECHA</th>
+                    <th>NOM_EQU_LOCAL</th>
+                    <th>GOLES_EQU_LOCAL</th>
+                    <th>GOLES_EQU_VISIT</th>
+                    <th>NOM_EQU_VISIT</th>
+                </tr>
+                <tbody>
+                <?php
+                include_once('./clases/CEquipos.php');
+                $consulta = CEquipo::mostrarPartidos();
+                foreach ($consulta as $fila) {
+                    echo "<tr>";
+                    echo "<td>" . $fila['ID_PARTIDO'] . "</td>";
+                    echo "<td>" . $fila['FECHA'] . "</td>";
+                    echo "<td>" . $fila['NOM_EQU_LOCAL'] . "</td>";
+                    echo "<td>" . $fila['GOLES_EQU_LOCAL'] . "</td>";
+                    echo "<td>" . $fila['GOLES_EQU_VISIT'] . "</td>";
+                    echo "<td>" . $fila['NOM_EQU_VISIT'] . "</td>";
+                    echo "</tr>";
+                }
+                ?>
+                </tbody>
+            </table>
+            
             `
         })
 

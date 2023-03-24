@@ -1,10 +1,11 @@
 <?php
 include_once "CConexion.php";
+
 class CPartido
 {
     public static function mostrarEquipos()
     {
-        $query = CConexion::ConexionBD()->prepare("select * from equipos");
+        $query = CConexion::ConexionBD()->prepare("select NOMBRE_EQUIPO from equipos");
         $query->execute();
         $data = $query->fetchAll();
         return $data;
