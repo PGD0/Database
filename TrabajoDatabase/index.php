@@ -15,23 +15,40 @@
     $Consulta = CConexion::ConexionBD();
     ?>
     <div>
-        <form action="">
-            <button id="gestion">Gestionar Equipos</button>
-            <button id="registro">Registrar Partido</button>
-            <button id="resultados">Ver Resultados</button>
+        <form action="" name="login">
+            <h3>Administrador</h3>
+            <input type="text" placeholder="Usuario" name="usuario" id="usuario">
+            <input type="text" placeholder="Contrasenia" name="contrasenia" id="contrasenia">
+            <input type="button" value="Registrar" onclick="admin();">
         </form>
+    </div>
+    <div id="botones">
+        <div id="usuario"></div>
     </div>
     <div id="container">
     </div>
     <script>
-        const Gestion = document.getElementById('gestion');
-        const Registro = document.getElementById('registro');
-        const Resultados = document.getElementById('resultados');
+        const admin = () => {
+            let usuario = document.login.usuario.value;
+            let contrasenia = document.login.contrasenia.value;
+            if (usuario == "juan" && contrasenia == "admin") {
+                alert("Informacion correcta, comenzando como administrador.....")
+                document.getElementById('botones').innerHTML = `
+                <form action="">
+                    <button id="gestion">Gestionar Equipos</button>
+                    <button id="registro">Registrar Partido</button>
+                    <button id="resultados">Ver Resultados</button>
+                </form>
+                `
+
+                const Gestion = document.getElementById('gestion');
+                const Registro = document.getElementById('registro');
+                const Resultados = document.getElementById('resultados');
 
 
-        Gestion.addEventListener('click', (e) => {
-            e.preventDefault();
-            document.getElementById('container').innerHTML = `
+                Gestion.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    document.getElementById('container').innerHTML = `
             <form action="./clases/CEquipos.php" method = "POST">
                 <label for="seleccion">Seleccionar row</label>
                 <input type="number" name ="seleccion" id="seleccion">
@@ -67,11 +84,11 @@
                 </tbody>
             </table>
             `
-        })
+                })
 
-        Registro.addEventListener('click', (e) => {
-            e.preventDefault();
-            document.getElementById('container').innerHTML = `
+                Registro.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    document.getElementById('container').innerHTML = `
             <form action="./clases/CEquipos.php" method="POST">
                 <input type="date" name="fecha" id="fecha">
                 <select name="equipo_local" id="equipo_local">
@@ -97,11 +114,11 @@
                 <input type="submit" name="insertar" id="insertar" value="insertar">
             </form>
             `
-        })
+                })
 
-        Resultados.addEventListener('click', (e) => {
-            e.preventDefault();
-            document.getElementById('container').innerHTML = `
+                Resultados.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    document.getElementById('container').innerHTML = `
             <table id="miTabla">
                 <tr>
                     <th>ID_PARTIDO</th>
@@ -130,16 +147,87 @@
             </table>
             
             `
-        })
+                })
 
-        function seleccionar() {
-            let table = document.getElementById('miTabla');
-            for (let i = 0; i < table.rows.length; i++) {
-                table.rows[i].onclick = function() {
-                    document.getElementById('seleccion').value = this.cells[0].innerHTML;
-                    document.getElementById('nom_equ').value = this.cells[1].innerHTML;
-                    document.getElementById('nom_entrenador').value = this.cells[2].innerHTML;
-                };
+                function seleccionar() {
+                    let table = document.getElementById('miTabla');
+                    for (let i = 0; i < table.rows.length; i++) {
+                        table.rows[i].onclick = function() {
+                            document.getElementById('seleccion').value = this.cells[0].innerHTML;
+                            document.getElementById('nom_equ').value = this.cells[1].innerHTML;
+                            document.getElementById('nom_entrenador').value = this.cells[2].innerHTML;
+                        };
+                    }
+                }
+            } else {
+                alert("Usuario o contrasenia incorrectos, comenzando como usuario.......")
+                document.getElementById('botones').innerHTML = `
+                <form action="">
+                    <button id="gestion">Gestionar Equipos</button>
+                    <button id="resultados">Ver Resultados</button>
+                </form>
+                `
+                const Gestion = document.getElementById('gestion');
+                const Resultados = document.getElementById('resultados');
+                Gestion.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    document.getElementById('container').innerHTML = `
+                <table id="miTabla">
+                    <tr>
+                        <th>ID_EQUIPO</th>
+                        <th>NOMBRE_EQUIPO</th>
+                        <th>NOMBRE_ENTRENADOR</th>
+                    </tr>
+                    <tbody>
+                    <?php
+                    include_once('./clases/CEquipos.php');
+                    $consulta = CEquipo::mostrarEquipos();
+                    foreach ($consulta as $fila) {
+                        echo "<tr>";
+                        echo "<td>" . $fila['ID_EQUIPO'] . "</td>";
+                        echo "<td>" . $fila['NOMBRE_EQUIPO'] . "</td>";
+                        echo "<td>" . $fila['NOMBRE_ENTRENADOR'] . "</td>";
+                        echo "</tr>";
+                    }
+                    ?>
+                    </tbody>
+                </table>
+                `
+
+                })
+                Resultados.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    document.getElementById('container').innerHTML = `
+            <table id="miTabla">
+                <tr>
+                    <th>ID_PARTIDO</th>
+                    <th>FECHA</th>
+                    <th>NOM_EQU_LOCAL</th>
+                    <th>GOLES_EQU_LOCAL</th>
+                    <th>GOLES_EQU_VISIT</th>
+                    <th>NOM_EQU_VISIT</th>
+                </tr>
+                <tbody>
+                <?php
+                include_once('./clases/CEquipos.php');
+                $consulta = CEquipo::mostrarPartidos();
+                foreach ($consulta as $fila) {
+                    echo "<tr>";
+                    echo "<td>" . $fila['ID_PARTIDO'] . "</td>";
+                    echo "<td>" . $fila['FECHA'] . "</td>";
+                    echo "<td>" . $fila['NOM_EQU_LOCAL'] . "</td>";
+                    echo "<td>" . $fila['GOLES_EQU_LOCAL'] . "</td>";
+                    echo "<td>" . $fila['GOLES_EQU_VISIT'] . "</td>";
+                    echo "<td>" . $fila['NOM_EQU_VISIT'] . "</td>";
+                    echo "</tr>";
+                }
+                ?>
+                </tbody>
+            </table>
+            
+            `
+                })
+
             }
         }
     </script>
