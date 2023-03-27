@@ -149,16 +149,7 @@
             `
                 })
 
-                function seleccionar() {
-                    let table = document.getElementById('miTabla');
-                    for (let i = 0; i < table.rows.length; i++) {
-                        table.rows[i].onclick = function() {
-                            document.getElementById('seleccion').value = this.cells[0].innerHTML;
-                            document.getElementById('nom_equ').value = this.cells[1].innerHTML;
-                            document.getElementById('nom_entrenador').value = this.cells[2].innerHTML;
-                        };
-                    }
-                }
+                
             } else {
                 alert("Usuario o contrasenia incorrectos, comenzando como usuario.......")
                 document.getElementById('botones').innerHTML = `
@@ -230,6 +221,17 @@
 
             }
         }
+        
+        function seleccionar() {
+                    let table = document.getElementById('miTabla');
+                    for (let i = 0; i < table.rows.length; i++) {
+                        table.rows[i].onclick = function() {
+                            document.getElementById('seleccion').value = this.cells[0].innerHTML;
+                            document.getElementById('nom_equ').value = this.cells[1].innerHTML;
+                            document.getElementById('nom_entrenador').value = this.cells[2].innerHTML;
+                        };
+                    }
+                }
     </script>
 </body>
 
